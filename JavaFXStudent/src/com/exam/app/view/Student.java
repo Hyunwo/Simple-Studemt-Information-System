@@ -1,48 +1,34 @@
 package com.exam.app.view;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.StringProperty;
+
 public class Student {
 
-	private String stdID = "";
-	private String stdName = "";
-	private String stdMajor = "";
-	private int stdAge;
+	private StringProperty stdID;
+	private StringProperty stdName;
+	private StringProperty stdMajor;
+	private IntegerProperty stdAge;
 
 	
-	public String getStdID() {
+	public Student(StringProperty stdID, StringProperty stdName, StringProperty stdMajor, IntegerProperty stdAge) {
+		this.stdID = stdID;
+	    this.stdName = stdName;
+	    this.stdMajor = stdMajor;
+	    this.stdAge = stdAge;
+	}
+	
+	public StringProperty stdIDProperty() {
 		return stdID;
 	}
-
-	public void setStdID(String stdID) {
-		this.stdID = stdID;
+	public StringProperty stdNameProperty() {
+	    return stdName;
 	}
-	
-	public String getStdName() {
-		return stdName;
+	public StringProperty stdMajorProperty() {
+	    return stdMajor;
 	}
-
-	public void setStdName(String stdName) {
-		this.stdName = stdName;
-	}
-
-	public String getStdMajor() {
-		return stdMajor;
-	}
-
-	public void setStdMajor(String stdMajor) {
-		this.stdMajor = stdMajor;
-	}
-
-	public int getStdAge() {
-		return stdAge;
-	}
-
-	public void setStdAge(int stdAge) {
-		this.stdAge = stdAge;
-	}
-
-	@Override
-	public String toString() {
-		return "Student(" + "stdID=" + stdID + ", stdName=" + stdName + ", stdMajor=" + stdMajor + ", stdAge=" + stdAge + ")";
+	public IntegerProperty stdAgeProperty() {
+	    return stdAge;
 	}
 	
 }
