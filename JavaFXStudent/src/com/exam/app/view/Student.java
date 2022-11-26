@@ -7,14 +7,12 @@ public class Student {
 
 	private StringProperty stdID;
 	private StringProperty stdName;
-	private StringProperty stdMajor;
 	private IntegerProperty stdAge;
 
 	
-	public Student(StringProperty stdID, StringProperty stdName, StringProperty stdMajor, IntegerProperty stdAge) {
+	public Student(StringProperty stdID, StringProperty stdName,  IntegerProperty stdAge) {
 		this.stdID = stdID;
 	    this.stdName = stdName;
-	    this.stdMajor = stdMajor;
 	    this.stdAge = stdAge;
 	}
 	
@@ -23,9 +21,6 @@ public class Student {
 	}
 	public StringProperty stdNameProperty() {
 	    return stdName;
-	}
-	public StringProperty stdMajorProperty() {
-	    return stdMajor;
 	}
 	public IntegerProperty stdAgeProperty() {
 	    return stdAge;
