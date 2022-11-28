@@ -56,7 +56,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/jdkwb/Desktop/mysql-connector-j-8.0.31/mysql-connector-j-8.0.31.jar">
+	<classpathentry kind="lib" path="C:/Users/jdkwb/Desktop/javafx-sdk-19/lib/mysql-connector-j-8.0.31.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/jdkwb/Desktop/javafx-sdk-19/lib/ojdbc11.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

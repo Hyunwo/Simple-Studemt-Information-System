@@ -21,15 +21,20 @@
                <left>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: BLACK;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
+                              <Button fx:id="btnHome" layoutX="14.0" layoutY="265.0" mnemonicParsing="false" onMouseClicked="#handleHideButtonAction" prefHeight="36.0" prefWidth="167.0" style="-fx-background-color: black;" text="홈" textFill="#fffdfd">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
                               <Label layoutX="48.0" layoutY="175.0" text="Admin Login" textFill="WHITE">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
                               <Line endX="82.19999694824219" endY="-1.52587890625E-5" layoutX="110.0" layoutY="215.0" startX="-100.0" stroke="WHITE" />
-                              <Button fx:id="btnStdAdd" layoutX="14.0" layoutY="275.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="167.0" style="-fx-background-color: black;" text="학생 등록" textFill="#fffdfd">
+                              <Button fx:id="btnStdAdd" layoutX="14.0" layoutY="325.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="167.0" style="-fx-background-color: black;" text="학생 등록" textFill="#fffdfd">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -94,7 +99,9 @@
                               <Button fx:id="btnDelect" layoutX="555.0" layoutY="547.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="91.0" text="삭제" />
                               <Button fx:id="btnUpdate" layoutX="683.0" layoutY="547.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="91.0" text="수정" />
                               <Button fx:id="btnReset" layoutX="448.0" layoutY="547.0" mnemonicParsing="false" onAction="#handleResetButtonAction" prefHeight="42.0" prefWidth="91.0" text="초기화" />
-                              <Button fx:id="btnAdd" layoutX="788.0" layoutY="547.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="91.0" text="등록" />
+                              <Button fx:id="btnAdd" layoutX="788.0" layoutY="547.0" mnemonicParsing="false" onAction="#handleAddButtonAction" prefHeight="42.0" prefWidth="91.0" text="등록" />
+                              <TextField fx:id="tfStdMajor" layoutX="413.0" layoutY="410.0" />
+                              <TextField fx:id="tfStdStatus" layoutX="413.0" layoutY="446.0" />
                            </children>
                         </AnchorPane>
                      </children>

@@ -1,16 +1,30 @@
 package com.exam.app.view;
 
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.*;
-import javafx.fxml.*;
-import javafx.scene.control.*;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -37,6 +51,9 @@ public class StudentManagementController implements Initializable {
 
     @FXML
     private Button btnUpdate;
+    
+    @FXML
+    private Button btnHome;
 
     @FXML
     private ImageView imageView;
@@ -64,6 +81,12 @@ public class StudentManagementController implements Initializable {
 
     @FXML
     private TextField tfStdName;
+    
+    @FXML
+    private TextField tfStdMajor;
+    
+    @FXML
+    private TextField tfStdStatus;
 
     @FXML
     private TextField tfStdSearch;
@@ -93,35 +116,123 @@ public class StudentManagementController implements Initializable {
     private TableColumn<Student, String> stdStatusColumn;
 	
 	
-	ObservableList<Student> observableList = FXCollections.observableArrayList(
-				new Student(new SimpleStringProperty("2019225189"), new SimpleStringProperty("Hyeonu"),  new SimpleIntegerProperty(24))
-				);
+	ObservableList<Student> observableList = FXCollections.observableArrayList();
 	
 	@Override
-	public void initialize(URL loaction, ResourceBundle resources) {
-		stdIDColumn.setCellValueFactory(cellData -> cellData.getValue().stdIDProperty());
-	    stdNameColumn.setCellValueFactory(cellData -> cellData.getValue().stdNameProperty());
-	    stdAgeColumn.setCellValueFactory(cellData -> cellData.getValue().stdAgeProperty().asObject());
-	    tableView.setItems(observableList);
-	    
-	    btnAdd.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @SuppressWarnings("unused")
-			public void handle(MouseEvent event) {
-                tableView.getItems().add(new Student(new SimpleStringProperty(tfStdID.getText()), new SimpleStringProperty(tfStdName.getText()), 
-                		 new SimpleIntegerProperty(Integer.parseInt(tfStdAge.getText()))));
-            }//마우스 이벤트로 컬럼 적용
-        });
-	    
+	public void initialize(URL url, ResourceBundle resources) {
+		
+		DatabaseConnection connectNow = new DatabaseConnection();
+		Connection connectDB = connectNow.getDBConnection();
+		
+		String studentViewQuery = "SELECT 학번, 이름, 전공, 나이, `재적 상태` FROM Student";
+		
+		try {
+			
+			Statement statement = connectDB.createStatement();
+			ResultSet queryOutput = statement.executeQuery(studentViewQuery);
+			
+			while (queryOutput.next()) {
+				
+				String querystdID = queryOutput.getString("학번");
+				String querystdName = queryOutput.getString("이름");
+				String querystdMajor = queryOutput.getString("전공");
+				Integer querystdAge = queryOutput.getInt("나이");
+				String querystdStatus = queryOutput.getString("재적 상태");
+				
+				// Populate the ObservationList
+				observableList.add(new Student(querystdID, querystdName, querystdMajor, querystdAge, querystdStatus));
+				
+			}
+			
+			// PropertyValueFactory corresponds to the new Student fields
+			// The table column is the one you annotate above
+			stdIDColumn.setCellValueFactory(new PropertyValueFactory<>("stdID"));
+			stdNameColumn.setCellValueFactory(new PropertyValueFactory<>("stdName"));
+			stdMajorColumn.setCellValueFactory(new PropertyValueFactory<>("stdMajor"));
+			stdAgeColumn.setCellValueFactory(new PropertyValueFactory<>("stdAge"));
+			stdStatusColumn.setCellValueFactory(new PropertyValueFactory<>("stdStatus"));
+			
+			tableView.setItems(observableList);
+			
+		} catch(SQLException e) {
+			Logger.getLogger(StudentManagementController.class.getName()).log(Level.SEVERE, null, e);
+			e.printStackTrace();
+			
+		}
+		
+		// Initial filtered list
+		FilteredList<Student> filteredData = new FilteredList<>(observableList, b -> true);
+		
+		tfStdSearch.textProperty().addListener((observable, oldValue, newValue) ->{
+			filteredData.setPredicate(Student -> {
+				
+				// If no search value then display all records or whatever records it current have. no changes.
+				if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+					return true;
+				}
+				
+				String searchKeyword = newValue.toLowerCase();
+				
+				if (Student.getStdID().toLowerCase().indexOf(searchKeyword) > -1) {
+					return true; // Means we found a match in StdID
+				} else if (Student.getStdName().toLowerCase().indexOf(searchKeyword) > -1) {
+					return true;
+				} else if (Student.getStdMajor().toLowerCase().indexOf(searchKeyword) > -1) {
+					return true;
+				} else if (Student.getStdAge().toString().indexOf(searchKeyword) > -1) {
+					return true;
+				} else if (Student.getStdStatus().toLowerCase().indexOf(searchKeyword) > -1) {
+					return true;
+				} else
+					return false; // no match found
+			});
+		});
+		
+		SortedList<Student> sortedData = new SortedList <>(filteredData);
+		
+		// Bind sorted result with table view
+		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+		
+		// Apply filtered and sorted data to the table view
+		tableView.setItems(sortedData);
+		
+		
+		// This is for AddButton
+		stdIDColumn.setCellValueFactory(new PropertyValueFactory<Student, String>("stdID"));
+		stdNameColumn.setCellValueFactory(new PropertyValueFactory<Student, String>("stdName"));
+		stdMajorColumn.setCellValueFactory(new PropertyValueFactory<Student, String>("stdMajor"));
+		stdAgeColumn.setCellValueFactory(new PropertyValueFactory<Student, Integer>("stdAge"));
+		stdStatusColumn.setCellValueFactory(new PropertyValueFactory<Student, String>("stdStatus"));
+		
+	    // Combobox list
 	    cbStdMajor.setItems(FXCollections.observableArrayList("컴퓨터공학부", "AI소프트웨어학과", "건축학부", "기계공학과"));
 	    cbStdStatus.setItems(FXCollections.observableArrayList("재학", "휴학"));
 	}
 	
+	// AddButton
+	@FXML
+	void handleAddButtonAction(ActionEvent event) {
+		Student student = new Student(tfStdID.getText(), tfStdName.getText(), tfStdMajor.getText(), 
+				Integer.parseInt(tfStdAge.getText()), tfStdStatus.getText());
+		ObservableList<Student> students = tableView.getItems();
+		students.add(student);
+		tableView.setItems(students);
+	}
+	
+	@FXML
+    void handleHideButtonAction(MouseEvent event) {
+		//btnHome.setVisible(false);
+    }
+	
+	// ResetButton
 	@FXML
 	private void handleResetButtonAction(ActionEvent event) {
 		// textfield objects can be reset by "" or null
 		tfStdID.setText("");
 		tfStdName.setText(null);
+		tfStdMajor.setText(null);
 		tfStdAge.setText(null);
+		tfStdStatus.setText(null);
 	}
 	
 	
