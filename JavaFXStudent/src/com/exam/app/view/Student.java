@@ -1,8 +1,5 @@
 package com.exam.app.view;
 
-//import javafx.beans.property.IntegerProperty;
-//import javafx.beans.property.StringProperty;
-
 public class Student {
 
 	private String stdID; //ÇÐ¹ø
@@ -59,5 +56,6 @@ public class Student {
 	public void setStdStatus(String stdStatus) {
 		this.stdStatus = stdStatus;
 	}
+	
 	
 }
