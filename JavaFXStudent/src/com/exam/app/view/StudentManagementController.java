@@ -67,22 +67,25 @@ public class StudentManagementController implements Initializable {
     private ImageView imageView;
 
     @FXML
-    private Label lblStdAge;
-
-    @FXML
     private Label lblStdID;
 
     @FXML
-    private Label lblStdMajor;
-
-    @FXML
     private Label lblStdName;
+    
+    @FXML
+    private Label lblStdMajor;
+    
+    @FXML
+    private Label lblStdGender;
+    
+    @FXML
+    private Label lblStdAge;
+    
+    @FXML
+    private Label lblStdAddress;
 
     @FXML
     private Label lblStdStatus;
-    
-    @FXML
-    private TextField tfStdAge;
 
     @FXML
     private TextField tfStdID;
@@ -92,6 +95,15 @@ public class StudentManagementController implements Initializable {
     
     @FXML
     private TextField tfStdMajor;
+    
+    @FXML
+    private TextField tfStdGender;
+    
+    @FXML
+    private TextField tfStdAge;
+    
+    @FXML
+    private TextField tfStdAddress;
     
     @FXML
     private TextField tfStdStatus;
@@ -123,8 +135,14 @@ public class StudentManagementController implements Initializable {
 	@FXML
 	private TableColumn<Student, String> stdMajorColumn;
 	
+    @FXML
+    private TableColumn<Student, String> stdGenderColumn;
+	
 	@FXML
 	private TableColumn<Student, Integer> stdAgeColumn;
+	
+    @FXML
+    private TableColumn<Student, String> stdAddressColumn;
 	
 	@FXML
     private TableColumn<Student, String> stdStatusColumn;
@@ -150,7 +168,7 @@ public class StudentManagementController implements Initializable {
 			result = prepare.executeQuery();
 			
 			while (result.next()) {
-				studentD = new Student(result.getString("학번"), result.getString("이름"), result.getString("학과"), result.getInt("나이"), result.getString("재적 상태"));
+				studentD = new Student(result.getString("학번"), result.getString("이름"), result.getString("학과"), result.getString("성별"), result.getInt("나이"), result.getString("주소"), result.getString("재적 상태"));
 				observableList.add(studentD);
 			}
 		} catch(SQLException e) {
@@ -163,12 +181,15 @@ public class StudentManagementController implements Initializable {
 	// 테이블 보기
 	private ObservableList<Student> addStudentsListD;
 	public void addStudentsShowListData() {
+		observableList.clear();
 		addStudentsListD = addStudentsListData();
 		
 		stdIDColumn.setCellValueFactory(new PropertyValueFactory<>("stdID"));
 		stdNameColumn.setCellValueFactory(new PropertyValueFactory<>("stdName"));
 		stdMajorColumn.setCellValueFactory(new PropertyValueFactory<>("stdMajor"));
+		stdGenderColumn.setCellValueFactory(new PropertyValueFactory<>("stdGender"));
 		stdAgeColumn.setCellValueFactory(new PropertyValueFactory<>("stdAge"));
+		stdAddressColumn.setCellValueFactory(new PropertyValueFactory<>("stdAddress"));
 		stdStatusColumn.setCellValueFactory(new PropertyValueFactory<>("stdStatus"));
 		
 		tableView.setItems(addStudentsListD);
@@ -187,13 +208,15 @@ public class StudentManagementController implements Initializable {
 		tfStdID.setText(studentD.getStdID());
 		tfStdName.setText(studentD.getStdName());
 		tfStdMajor.setText(studentD.getStdMajor());
+		tfStdGender.setText(studentD.getStdGender());
 		tfStdAge.setText(String.valueOf(studentD.getStdAge()));
+		tfStdAddress.setText(studentD.getStdAddress());
 		tfStdStatus.setText(studentD.getStdStatus());
 	}
 	
 	// 등록
 	public void addStudentsAdd() {
-		String insertData = "INSERT INTO Student " + "(학번, 이름, 학과, 나이, `재적 상태`) " + "VALUES(?,?,?,?,?)";
+		String insertData = "INSERT INTO Student " + "(학번, 이름, 학과, 성별, 나이, 주소, `재적 상태`) " + "VALUES(?,?,?,?,?,?,?)";
 
         connect = DatabaseConnection.getDBConnection();
 
@@ -201,7 +224,8 @@ public class StudentManagementController implements Initializable {
             Alert alert;
 
             // 빈칸 체크 및 에러
-            if (tfStdID.getText().isEmpty() || tfStdName.getText().isEmpty() || tfStdMajor.getText().isEmpty()|| tfStdAge.getText().isEmpty() || tfStdStatus.getText().isEmpty()) {
+            if (tfStdID.getText().isEmpty() || tfStdName.getText().isEmpty() || tfStdMajor.getText().isEmpty()|| tfStdGender.getText().isEmpty() 
+            		|| tfStdAge.getText().isEmpty() || tfStdAddress.getText().isEmpty() || tfStdStatus.getText().isEmpty()) {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -226,8 +250,10 @@ public class StudentManagementController implements Initializable {
                     prepare.setString(1, tfStdID.getText());
                     prepare.setString(2, tfStdName.getText());
                     prepare.setString(3, tfStdMajor.getText());
-                    prepare.setString(4, tfStdAge.getText());
-                    prepare.setString(5, tfStdStatus.getText());
+                    prepare.setString(4, tfStdGender.getText());
+                    prepare.setString(5, tfStdAge.getText());
+                    prepare.setString(6, tfStdAddress.getText());
+                    prepare.setString(7, tfStdStatus.getText());
 
                     prepare.executeUpdate();
 
@@ -238,7 +264,7 @@ public class StudentManagementController implements Initializable {
                     alert.showAndWait();
 
                 	// 업데이트
-                    observableList.clear();
+                    //observableList.clear();
                     addStudentsShowListData();
                     // 초기화
                     addStudentsClear();
@@ -255,7 +281,9 @@ public class StudentManagementController implements Initializable {
 		tfStdID.setText("");
 		tfStdName.setText(null);
 		tfStdMajor.setText(null);
+		tfStdGender.setText(null);
 		tfStdAge.setText(null);
+		tfStdAddress.setText(null);
 		tfStdStatus.setText(null);
 	}
 	
@@ -265,7 +293,7 @@ public class StudentManagementController implements Initializable {
 		addStudentsShowListData();
 		
 	    // Combobox list
-	    cbStdMajor.setItems(FXCollections.observableArrayList("컴퓨터공학부", "AI소프트웨어학과", "건축학부", "기계공학과"));
+	    cbStdMajor.setItems(FXCollections.observableArrayList("컴퓨터공학부", "AI소프트웨어학과", "건축학부", "기계공학과", "경영학과"));
 	    cbStdStatus.setItems(FXCollections.observableArrayList("재학", "휴학"));
 	}
 	
@@ -288,7 +316,11 @@ public class StudentManagementController implements Initializable {
 							return true;
 						} else if (Student.getStdMajor().toLowerCase().indexOf(searchKeyword) > -1) {
 							return true;
+						} else if (Student.getStdGender().toLowerCase().indexOf(searchKeyword) > -1) {
+							return true;
 						} else if (Student.getStdAge().toString().indexOf(searchKeyword) > -1) {
+							return true;
+						} else if (Student.getStdAddress().toLowerCase().indexOf(searchKeyword) > -1) {
 							return true;
 						} else if (Student.getStdStatus().toLowerCase().indexOf(searchKeyword) > -1) {
 							return true;
