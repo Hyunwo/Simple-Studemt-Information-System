@@ -10,8 +10,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -28,11 +26,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 public class StudentManagementController implements Initializable {
 
@@ -49,7 +44,13 @@ public class StudentManagementController implements Initializable {
     private Button btnReset;
 
     @FXML
+    private Button btnReset2;
+    
+    @FXML
     private Button btnStdAdd;
+    
+    @FXML
+    private Button btnStdAdd2;
 
     @FXML
     private Button btnUpdate;
@@ -58,10 +59,7 @@ public class StudentManagementController implements Initializable {
     private Button btnHome;
     
     @FXML
-    private Button btnClose;
-    
-    @FXML
-    private Button btnMinimize;
+    private Button btnStdGrade;
 
     @FXML
     private ImageView imageView;
@@ -86,6 +84,30 @@ public class StudentManagementController implements Initializable {
 
     @FXML
     private Label lblStdStatus;
+    
+    @FXML
+    private Label lbl11;
+
+    @FXML
+    private Label lbl12;
+
+    @FXML
+    private Label lbl21;
+
+    @FXML
+    private Label lbl22;
+
+    @FXML
+    private Label lbl31;
+
+    @FXML
+    private Label lbl32;
+
+    @FXML
+    private Label lbl41;
+
+    @FXML
+    private Label lbl42;
 
     @FXML
     private TextField tfStdID;
@@ -112,10 +134,37 @@ public class StudentManagementController implements Initializable {
     private TextField tfStdSearch;
     
     @FXML
+    private TextField tf11;
+
+    @FXML
+    private TextField tf12;
+
+    @FXML
+    private TextField tf21;
+
+    @FXML
+    private TextField tf22;
+
+    @FXML
+    private TextField tf31;
+
+    @FXML
+    private TextField tf32;
+
+    @FXML
+    private TextField tf41;
+
+    @FXML
+    private TextField tf42;
+    
+    @FXML
     private AnchorPane main_form;
     
     @FXML
     private AnchorPane AddStudent_form;
+    
+    @FXML
+    private AnchorPane studentGrade_form;
     
     @FXML
     private ComboBox<String> cbStdMajor;
@@ -125,6 +174,9 @@ public class StudentManagementController implements Initializable {
 
 	@FXML
 	private TableView<Student> tableView;
+	
+	@FXML
+	private TableView<Student> tableView2;
 	
 	@FXML
 	private TableColumn<Student, String> stdIDColumn;
@@ -146,6 +198,36 @@ public class StudentManagementController implements Initializable {
 	
 	@FXML
     private TableColumn<Student, String> stdStatusColumn;
+	
+    @FXML
+    private TableColumn<Student, String> std11Column;
+
+    @FXML
+    private TableColumn<Student, String> std12Column;
+
+    @FXML
+    private TableColumn<Student, String> std21Column;
+
+    @FXML
+    private TableColumn<Student, String> std22Column;
+
+    @FXML
+    private TableColumn<Student, String> std31Column;
+
+    @FXML
+    private TableColumn<Student, String> std32Column;
+
+    @FXML
+    private TableColumn<Student, String> std41Column;
+
+    @FXML
+    private TableColumn<Student, String> std42Column;
+    
+    @FXML
+    private TableColumn<Student, String> stdIDColumn2;
+    
+    @FXML
+    private TableColumn<Student, String> stdNameColumn2;
 	
 	private Connection connect;
 	private PreparedStatement prepare;
@@ -257,6 +339,23 @@ public class StudentManagementController implements Initializable {
 
                     prepare.executeUpdate();
 
+                    // 학생등록시 성적도 등록
+                    String insertStudentGrade = "INSERT INTO student_grade " + "(학번, 이름, `학점(1-1)`, `학점(1-2)`, `학점(2-1)`, `학점(2-2)`, `학점(3-1)`, `학점(3-2)`, `학점(4-1)`, `학점(4-2)`) " + "VALUES(?,?,?,?,?,?,?,?,?,?)";
+                    
+                    prepare = connect.prepareStatement(insertStudentGrade);
+                    prepare.setString(1, tfStdID.getText());
+                    prepare.setString(2, tfStdName.getText());
+                    prepare.setString(3, "0.0");
+                    prepare.setString(4, "0.0");
+                    prepare.setString(5, "0.0");
+                    prepare.setString(6, "0.0");
+                    prepare.setString(7, "0.0");
+                    prepare.setString(8, "0.0");
+                    prepare.setString(9, "0.0");
+                    prepare.setString(10, "0.0");
+                    
+                    prepare.executeUpdate();
+                    
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("알림");
                     alert.setHeaderText(null);
@@ -264,7 +363,6 @@ public class StudentManagementController implements Initializable {
                     alert.showAndWait();
 
                 	// 업데이트
-                    //observableList.clear();
                     addStudentsShowListData();
                     // 초기화
                     addStudentsClear();
@@ -276,6 +374,52 @@ public class StudentManagementController implements Initializable {
         }
     }
 	
+	
+	public ObservableList<Student> studentGradeListData(){
+		
+		ObservableList<Student> listData = FXCollections.observableArrayList();
+		
+		String sql = "SELECT * FROM student_grade";
+		
+		connect = DatabaseConnection.getDBConnection();
+		
+		try {
+			Student studentD;
+			
+			prepare = connect.prepareStatement(sql);
+			result = prepare.executeQuery();
+			
+			while(result.next()) {
+				studentD = new Student(result.getString("학번"), result.getString("이름"), result.getDouble("학점(1-1)"), result.getDouble("학점(1-2)")
+						, result.getDouble("학점(2-1)"), result.getDouble("학점(2-2)"), result.getDouble("학점(3-1)"), result.getDouble("학점(3-2)"), result.getDouble("학점(4-1)"), result.getDouble("학점(4-2)"));
+				listData.add(studentD);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listData;
+	}
+	
+	private ObservableList<Student> studentGradeList;
+	private void studentGradeShowListData() {
+		studentGradeList = studentGradeListData();
+		
+		stdIDColumn2.setCellValueFactory(new PropertyValueFactory<>("stdID"));
+		stdNameColumn2.setCellValueFactory(new PropertyValueFactory<>("stdName"));
+		std11Column.setCellValueFactory(new PropertyValueFactory<>("std11"));
+		std12Column.setCellValueFactory(new PropertyValueFactory<>("std12"));
+		std21Column.setCellValueFactory(new PropertyValueFactory<>("std21"));
+		std22Column.setCellValueFactory(new PropertyValueFactory<>("std22"));
+		std31Column.setCellValueFactory(new PropertyValueFactory<>("std31"));
+		std32Column.setCellValueFactory(new PropertyValueFactory<>("std32"));
+		std41Column.setCellValueFactory(new PropertyValueFactory<>("std41"));
+		std42Column.setCellValueFactory(new PropertyValueFactory<>("std42"));
+		
+		tableView2.setItems(addStudentsListD);;
+		
+	}
+	
 	// 초기화
 	public void addStudentsClear() {
 		tfStdID.setText("");
@@ -285,6 +429,15 @@ public class StudentManagementController implements Initializable {
 		tfStdAge.setText(null);
 		tfStdAddress.setText(null);
 		tfStdStatus.setText(null);
+		
+		tf11.setText("");
+		tf12.setText("");
+		tf21.setText("");
+		tf22.setText("");
+		tf31.setText("");
+		tf32.setText("");
+		tf41.setText("");
+		tf42.setText(null);
 	}
 	
 	@Override
@@ -292,13 +445,16 @@ public class StudentManagementController implements Initializable {
 		
 		addStudentsShowListData();
 		
+		studentGradeShowListData();
+		
 	    // Combobox list
 	    cbStdMajor.setItems(FXCollections.observableArrayList("컴퓨터공학부", "AI소프트웨어학과", "건축학부", "기계공학과", "경영학과"));
 	    cbStdStatus.setItems(FXCollections.observableArrayList("재학", "휴학"));
 	}
 	
+	// 필터
 	public void addStudentsSearch() {
-		// 필터
+		
 				FilteredList<Student> filteredData = new FilteredList<>(observableList, b -> true);
 				
 				tfStdSearch.textProperty().addListener((observable, oldValue, newValue) ->{
@@ -339,26 +495,27 @@ public class StudentManagementController implements Initializable {
 	
 	
 	//창 변환
-//	public void switchFrom(ActionEvent event) {
-//		if (event.getSource() == btnStdAdd) {
-//			AddStudent_form.setVisible(true);
-//			//나머지 form은 flase
-//			//클릭시 색 변화 -> 다른 색으로 변경할 것
-//			btnStdAdd.setStyle("-fx-background-color:linear-gradient(to bottom right, #585c5e, #999c9a);");
-//			addStudentsShowListData();
-//			
-//		}
-//		//else if()
-//	}
-	
-	// 축소
-	public void minimize() {
-		Stage stage = (Stage)main_form.getScene().getWindow();
-		stage.setIconified(true);
+	public void switchFrom(ActionEvent event) {
+		if (event.getSource() == btnStdAdd) {
+			AddStudent_form.setVisible(true);
+			studentGrade_form.setVisible(false);
+			//나머지 form은 flase
+			
+			//클릭시 색 변화
+			btnStdAdd.setStyle("-fx-background-color:linear-gradient(to bottom right, #CE9FFC, #7367F0);");
+			btnStdGrade.setStyle("-fx-background-color:transparent");
+			addStudentsShowListData();
+			
+		}
+		else if (event.getSource() == btnStdGrade) {
+			AddStudent_form.setVisible(false);
+			studentGrade_form.setVisible(true);
+			
+			btnStdAdd.setStyle("-fx-background-color:transparent");
+			btnStdGrade.setStyle("-fx-background-color:linear-gradient(to bottom right, #CE9FFC, #7367F0);");
+			studentGradeShowListData();
+		}
 	}
 	
-	// 종료
-	public void close() {
-		System.exit(0);
-	}
+	
 }
