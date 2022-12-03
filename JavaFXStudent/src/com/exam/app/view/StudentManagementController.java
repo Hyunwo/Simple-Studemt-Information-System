@@ -134,6 +134,12 @@ public class StudentManagementController implements Initializable {
     private TextField tfStdSearch;
     
     @FXML
+    private TextField tfStdID2;
+
+    @FXML
+    private TextField tfStdName2;
+    
+    @FXML
     private TextField tf11;
 
     @FXML
@@ -295,6 +301,28 @@ public class StudentManagementController implements Initializable {
 		tfStdAddress.setText(studentD.getStdAddress());
 		tfStdStatus.setText(studentD.getStdStatus());
 	}
+	
+	// tableView2에서 선택하면 textfield에 보이게 한다
+	public void studentGradesSelect() {
+
+        Student studentD = tableView2.getSelectionModel().getSelectedItem();
+        int num = tableView2.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        tfStdID2.setText(studentD.getStdID());
+        tfStdName2.setText(studentD.getStdName());
+        tf11.setText(String.valueOf(studentD.getStd11()));
+        tf12.setText(String.valueOf(studentD.getStd12()));
+        tf21.setText(String.valueOf(studentD.getStd21()));
+        tf22.setText(String.valueOf(studentD.getStd22()));
+        tf31.setText(String.valueOf(studentD.getStd31()));
+        tf32.setText(String.valueOf(studentD.getStd32()));
+        tf41.setText(String.valueOf(studentD.getStd41()));
+        tf42.setText(String.valueOf(studentD.getStd42()));
+    }
 	
 	// 등록
 	public void addStudentsAdd() {

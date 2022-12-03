@@ -171,22 +171,22 @@
                                     <Button layoutX="94.0" layoutY="532.0" mnemonicParsing="false" text="수정" />
                                     <Button layoutX="165.0" layoutY="532.0" mnemonicParsing="false" text="삭제" />
                                     <Button fx:id="btnReset2" layoutX="238.0" layoutY="532.0" mnemonicParsing="false" onAction="#addStudentsClear" text="초기화" />
-                                    <TextField fx:id="tf11" layoutX="67.0" layoutY="344.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" AnchorPane.leftAnchor="67.0" />
-                                    <TextField fx:id="tf12" layoutX="215.0" layoutY="344.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
-                                    <TextField fx:id="tf21" layoutX="67.0" layoutY="387.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
-                                    <TextField fx:id="tf22" layoutX="215.0" layoutY="387.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
-                                    <TextField fx:id="tf31" layoutX="67.0" layoutY="430.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
-                                    <TextField fx:id="tf32" layoutX="215.0" layoutY="430.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
-                                    <TextField fx:id="tf41" layoutX="67.0" layoutY="470.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
-                                    <TextField fx:id="tf42" layoutX="215.0" layoutY="470.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
+                                    <TextField fx:id="tf11" layoutX="67.0" layoutY="344.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(1-1)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" AnchorPane.leftAnchor="67.0" />
+                                    <TextField fx:id="tf12" layoutX="215.0" layoutY="344.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(1-2)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
+                                    <TextField fx:id="tf21" layoutX="67.0" layoutY="387.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(2-1)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
+                                    <TextField fx:id="tf22" layoutX="215.0" layoutY="387.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(2-2)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
+                                    <TextField fx:id="tf31" layoutX="67.0" layoutY="430.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(3-1)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
+                                    <TextField fx:id="tf32" layoutX="215.0" layoutY="430.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(3-2)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
+                                    <TextField fx:id="tf41" layoutX="67.0" layoutY="470.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(4-1)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
+                                    <TextField fx:id="tf42" layoutX="215.0" layoutY="470.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(4-2)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
                                     <Label fx:id="lbl111" layoutX="26.0" layoutY="304.0" text="학번" />
                                     <Label fx:id="lbl121" layoutX="173.0" layoutY="304.0" text="이름" />
-                                    <TextField layoutX="67.0" layoutY="300.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
-                                    <TextField layoutX="215.0" layoutY="300.0" prefHeight="22.0" prefWidth="76.0" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
+                                    <TextField fx:id="tfStdID2" layoutX="67.0" layoutY="300.0" prefHeight="22.0" prefWidth="76.0" promptText="학번" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
+                                    <TextField fx:id="tfStdName2" layoutX="215.0" layoutY="300.0" prefHeight="22.0" prefWidth="76.0" promptText="이름" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
                                  </children></AnchorPane>
                               <AnchorPane layoutX="326.0" prefHeight="600.0" prefWidth="575.0">
                                  <children>
-                                    <TableView fx:id="tableView2" layoutX="3.0" layoutY="55.0" prefHeight="525.0" prefWidth="555.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);">
+                                    <TableView fx:id="tableView2" layoutX="3.0" layoutY="55.0" onMouseClicked="#studentGradesSelect" prefHeight="525.0" prefWidth="555.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);">
                                       <columns>
                                         <TableColumn fx:id="stdIDColumn2" prefWidth="70.0" text="학번" />
                                         <TableColumn fx:id="stdNameColumn2" prefWidth="60.0" text="이름" />
