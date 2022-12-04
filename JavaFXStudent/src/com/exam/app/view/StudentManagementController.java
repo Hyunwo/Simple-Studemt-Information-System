@@ -302,28 +302,6 @@ public class StudentManagementController implements Initializable {
 		tfStdStatus.setText(studentD.getStdStatus());
 	}
 	
-	// tableView2에서 선택하면 textfield에 보이게 한다
-	public void studentGradesSelect() {
-
-        Student studentD = tableView2.getSelectionModel().getSelectedItem();
-        int num = tableView2.getSelectionModel().getSelectedIndex();
-
-        if ((num - 1) < -1) {
-            return;
-        }
-
-        tfStdID2.setText(studentD.getStdID());
-        tfStdName2.setText(studentD.getStdName());
-        tf11.setText(String.valueOf(studentD.getStd11()));
-        tf12.setText(String.valueOf(studentD.getStd12()));
-        tf21.setText(String.valueOf(studentD.getStd21()));
-        tf22.setText(String.valueOf(studentD.getStd22()));
-        tf31.setText(String.valueOf(studentD.getStd31()));
-        tf32.setText(String.valueOf(studentD.getStd32()));
-        tf41.setText(String.valueOf(studentD.getStd41()));
-        tf42.setText(String.valueOf(studentD.getStd42()));
-    }
-	
 	// 등록
 	public void addStudentsAdd() {
 		String insertData = "INSERT INTO Student " + "(학번, 이름, 학과, 성별, 나이, 주소, `재적 상태`) " + "VALUES(?,?,?,?,?,?,?)";
@@ -444,9 +422,63 @@ public class StudentManagementController implements Initializable {
 		std41Column.setCellValueFactory(new PropertyValueFactory<>("std41"));
 		std42Column.setCellValueFactory(new PropertyValueFactory<>("std42"));
 		
-		tableView2.setItems(addStudentsListD);;
+		tableView2.setItems(studentGradeList);
 		
 	}
+	
+	// tableView2에서 선택하면 textfield에 보이게 한다
+	public void studentGradesSelect() {
+		
+		Student studentD = tableView2.getSelectionModel().getSelectedItem();
+	    int num = tableView2.getSelectionModel().getSelectedIndex();
+
+	    if ((num - 1) < -1) {
+	    	return;
+	        }
+
+	    tfStdID2.setText(studentD.getStdID());
+	    tfStdName2.setText(studentD.getStdName());
+	    tf11.setText(String.valueOf(studentD.getStd11()));
+	    tf12.setText(String.valueOf(studentD.getStd12()));
+	    tf21.setText(String.valueOf(studentD.getStd21()));
+	    tf22.setText(String.valueOf(studentD.getStd22()));
+	    tf31.setText(String.valueOf(studentD.getStd31()));
+	    tf32.setText(String.valueOf(studentD.getStd32()));
+	    tf41.setText(String.valueOf(studentD.getStd41()));
+	    tf42.setText(String.valueOf(studentD.getStd42()));
+	}
+	
+	// 학점 추가
+	public void studentGradeUpdate() {
+
+        connect = DatabaseConnection.getDBConnection();
+
+
+        try {
+
+            String updateData = "UPDATE student_grade SET "
+                  + " `학점(1-1)` = '" + tf11.getText() + "', `학점(1-2)` = '" + tf12.getText() + "', `학점(2-1)` = '" + tf21.getText() + "', `학점(2-2)` = '" + tf22.getText()
+                  + "', `학점(3-1)` = '" + tf31.getText() + "', `학점(3-2)` = '" + tf32.getText() + "', `학점(4-1)` = '" + tf41.getText() + "', `학점(4-2)` = '" + tf42.getText()
+                  + "' WHERE 학번 = '" + tfStdID2.getText() + "'";
+
+            Alert alert;
+            
+            statement = connect.createStatement();
+            statement.executeUpdate(updateData);
+
+            alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("알림");
+            alert.setHeaderText(null);
+            alert.setContentText("등록되었습니다.");
+            alert.showAndWait();
+
+            // 업데이트
+            studentGradeShowListData();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	
 	// 초기화
 	public void addStudentsClear() {

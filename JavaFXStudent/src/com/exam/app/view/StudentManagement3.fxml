@@ -167,10 +167,9 @@
                                     <Label fx:id="lbl32" layoutX="163.0" layoutY="434.0" text="학점(3-2)" />
                                     <Label fx:id="lbl41" layoutX="15.0" layoutY="474.0" text="학점(4-1)" />
                                     <Label fx:id="lbl42" layoutX="163.0" layoutY="474.0" text="학점(4-2)" />
-                                    <Button fx:id="btnStdAdd2" layoutX="26.0" layoutY="532.0" mnemonicParsing="false" text="등록" />
-                                    <Button layoutX="94.0" layoutY="532.0" mnemonicParsing="false" text="수정" />
-                                    <Button layoutX="165.0" layoutY="532.0" mnemonicParsing="false" text="삭제" />
-                                    <Button fx:id="btnReset2" layoutX="238.0" layoutY="532.0" mnemonicParsing="false" onAction="#addStudentsClear" text="초기화" />
+                                    <Button fx:id="btnStdAdd2" layoutX="38.0" layoutY="532.0" mnemonicParsing="false" onAction="#studentGradeUpdate" text="등록 및 수정" />
+                                    <Button layoutX="153.0" layoutY="532.0" mnemonicParsing="false" text="삭제" />
+                                    <Button fx:id="btnReset2" layoutX="227.0" layoutY="532.0" mnemonicParsing="false" onAction="#addStudentsClear" text="초기화" />
                                     <TextField fx:id="tf11" layoutX="67.0" layoutY="344.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(1-1)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" AnchorPane.leftAnchor="67.0" />
                                     <TextField fx:id="tf12" layoutX="215.0" layoutY="344.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(1-2)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
                                     <TextField fx:id="tf21" layoutX="67.0" layoutY="387.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(2-1)" style="-fx-border-color: linear-gradient(to bottom right, #CE9FFC, #7367F0);" />
