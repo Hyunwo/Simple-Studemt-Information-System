@@ -63,6 +63,11 @@
                               <Line endX="-38.399993896484375" endY="1.52587890625E-5" layoutX="231.0" layoutY="141.0" startX="-224.00001525878906" startY="1.52587890625E-5" stroke="#f0efe6" />
                            </children>
                         </AnchorPane>
+                        <Button fx:id="btnStdGrade1" layoutX="15.0" layoutY="536.0" mnemonicParsing="false" onAction="#switchFrom" prefHeight="36.0" prefWidth="167.0" style="-fx-background-color: transparent;" text="LogOut" textFill="#f0efe6">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
                      </children>
                   </AnchorPane>
                </left>
@@ -165,9 +170,8 @@
                                     <Label fx:id="lbl32" layoutX="163.0" layoutY="434.0" text="학점(3-2)" />
                                     <Label fx:id="lbl41" layoutX="15.0" layoutY="474.0" text="학점(4-1)" />
                                     <Label fx:id="lbl42" layoutX="163.0" layoutY="474.0" text="학점(4-2)" />
-                                    <Button fx:id="btnStdAdd2" layoutX="38.0" layoutY="532.0" mnemonicParsing="false" onAction="#studentGradeUpdate" text="등록 및 수정" />
-                                    <Button layoutX="153.0" layoutY="532.0" mnemonicParsing="false" text="삭제" />
-                                    <Button fx:id="btnReset2" layoutX="227.0" layoutY="532.0" mnemonicParsing="false" onAction="#addStudentsClear" text="초기화" />
+                                    <Button fx:id="btnStdAdd2" layoutX="38.0" layoutY="532.0" mnemonicParsing="false" onAction="#studentGradeUpdate" prefHeight="40.0" prefWidth="105.0" text="등록 및 수정" />
+                                    <Button fx:id="btnReset2" layoutX="185.0" layoutY="532.0" mnemonicParsing="false" onAction="#addStudentsClear" prefHeight="40.0" prefWidth="105.0" text="초기화" />
                                     <TextField fx:id="tf11" layoutX="67.0" layoutY="344.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(1-1)" style="-fx-border-color: #67C6B8;" AnchorPane.leftAnchor="67.0" />
                                     <TextField fx:id="tf12" layoutX="215.0" layoutY="344.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(1-2)" style="-fx-border-color: #67C6B8;" />
                                     <TextField fx:id="tf21" layoutX="67.0" layoutY="387.0" prefHeight="22.0" prefWidth="76.0" promptText="학점(2-1)" style="-fx-border-color: #67C6B8;" />

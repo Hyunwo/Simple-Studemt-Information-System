@@ -4,11 +4,8 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,7 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -412,7 +408,6 @@ public class StudentManagementController implements Initializable {
 		std41Column.setCellValueFactory(new PropertyValueFactory<>("std41"));
 		std42Column.setCellValueFactory(new PropertyValueFactory<>("std42"));
 		
-		tableView2.setItems(addStudentsListD);
 		tableView2.setItems(studentGradeList);
 		
 	}
@@ -480,6 +475,8 @@ public class StudentManagementController implements Initializable {
 		tfStdAddress.setText(null);
 		tfStdStatus.setText(null);
 		
+		tfStdID2.setText("");
+		tfStdName2.setText(null);
 		tf11.setText("");
 		tf12.setText("");
 		tf21.setText("");

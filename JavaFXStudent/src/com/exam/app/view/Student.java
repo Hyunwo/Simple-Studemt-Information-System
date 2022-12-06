@@ -31,6 +31,8 @@ public class Student {
 	
 	public Student(String stdID, String stdName, Double std11, Double std12, Double std21, Double std22, Double std31, Double std32,
 			Double std41, Double std42) {
+		this.stdID = stdID;
+	    this.stdName = stdName;
 		this.std11 = std11;
 		this.std12 = std12;
 		this.std21 = std21;
