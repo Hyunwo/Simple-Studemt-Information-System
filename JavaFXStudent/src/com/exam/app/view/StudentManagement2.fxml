@@ -21,20 +21,20 @@
                <left>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: BLACK;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #67C6B8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Button fx:id="btnHome" layoutX="14.0" layoutY="265.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="167.0" style="-fx-background-color: black;" text="홈" textFill="#fffdfd">
+                              <Button fx:id="btnHome" layoutX="14.0" layoutY="265.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="167.0" style="-fx-background-color: #3E3E3F;" text="홈" textFill="#f0efe6">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Button>
-                              <Label layoutX="48.0" layoutY="175.0" text="Admin Login" textFill="WHITE">
+                              <Label layoutX="48.0" layoutY="175.0" text="Admin Login" textFill="#f0efe6">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <Line endX="82.19999694824219" endY="-1.52587890625E-5" layoutX="110.0" layoutY="215.0" startX="-100.0" stroke="WHITE" />
-                              <Button fx:id="btnStdAdd" layoutX="14.0" layoutY="325.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="167.0" style="-fx-background-color: black;" text="학생 등록" textFill="#fffdfd">
+                              <Line endX="82.19999694824219" endY="-1.52587890625E-5" layoutX="110.0" layoutY="215.0" startX="-100.0" stroke="#f0efe6" />
+                              <Button fx:id="btnStdAdd" layoutX="14.0" layoutY="325.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="167.0" style="-fx-background-color: #F0EFE6;" text="학생 등록" textFill="#3e3e3f">
                                  <font>
                                     <Font size="14.0" />
                                  </font>

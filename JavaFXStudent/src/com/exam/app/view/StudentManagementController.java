@@ -17,16 +17,16 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 public class StudentManagementController implements Initializable {
@@ -36,9 +36,6 @@ public class StudentManagementController implements Initializable {
 
     @FXML
     private Button btnDelect;
-
-    @FXML
-    private Button btnImage;
 
     @FXML
     private Button btnReset;
@@ -60,9 +57,6 @@ public class StudentManagementController implements Initializable {
     
     @FXML
     private Button btnStdGrade;
-
-    @FXML
-    private ImageView imageView;
 
     @FXML
     private Label lblStdID;
@@ -173,10 +167,7 @@ public class StudentManagementController implements Initializable {
     private AnchorPane studentGrade_form;
     
     @FXML
-    private ComboBox<String> cbStdMajor;
-
-    @FXML
-    private ComboBox<String> cbStdStatus;
+    private LineChart<?, ?> stdGradeLineChart;
 
 	@FXML
 	private TableView<Student> tableView;
@@ -235,10 +226,10 @@ public class StudentManagementController implements Initializable {
     @FXML
     private TableColumn<Student, String> stdNameColumn2;
 	
-	private Connection connect;
-	private PreparedStatement prepare;
-	private Statement statement;
-	private ResultSet result;
+	//private Connection connect;
+	//private PreparedStatement prepare;
+	//private Statement statement;
+	//private ResultSet result;
 	
 	ObservableList<Student> observableList = FXCollections.observableArrayList();
 	PreparedStatement pst = null;
@@ -248,19 +239,18 @@ public class StudentManagementController implements Initializable {
 		
 		String studentViewQuery = "SELECT * FROM Student";
 		
-		connect = DatabaseConnection.getDBConnection();
+		Connection connect = DatabaseConnection.getDBConnection();
 		
 		try {
 			Student studentD;
-			prepare = connect.prepareStatement(studentViewQuery);
-			result = prepare.executeQuery();
+			PreparedStatement prepare = connect.prepareStatement(studentViewQuery);
+			ResultSet result = prepare.executeQuery();
 			
 			while (result.next()) {
 				studentD = new Student(result.getString("학번"), result.getString("이름"), result.getString("학과"), result.getString("성별"), result.getInt("나이"), result.getString("주소"), result.getString("재적 상태"));
 				observableList.add(studentD);
 			}
-		} catch(SQLException e) {
-			Logger.getLogger(StudentManagementController.class.getName()).log(Level.SEVERE, null, e);
+		} catch(Exception e) {
 			e.printStackTrace();
 			
 		} return observableList;
@@ -306,7 +296,7 @@ public class StudentManagementController implements Initializable {
 	public void addStudentsAdd() {
 		String insertData = "INSERT INTO Student " + "(학번, 이름, 학과, 성별, 나이, 주소, `재적 상태`) " + "VALUES(?,?,?,?,?,?,?)";
 
-        connect = DatabaseConnection.getDBConnection();
+		Connection connect = DatabaseConnection.getDBConnection();
 
         try {
             Alert alert;
@@ -323,8 +313,8 @@ public class StudentManagementController implements Initializable {
                 // stdID가 있는지 체크
                 String checkData = "SELECT 학번 FROM Student WHERE 학번 = '" + tfStdID.getText() + "'";
 
-                statement = connect.createStatement();
-                result = statement.executeQuery(checkData);
+                Statement statement = connect.createStatement();
+                ResultSet result = statement.executeQuery(checkData);
 
                 // Error
                 if (result.next()) {
@@ -334,7 +324,7 @@ public class StudentManagementController implements Initializable {
                     alert.setContentText(tfStdID.getText() + "는 이미 존재합니다.");
                     alert.showAndWait();
                 } else {
-                	prepare = connect.prepareStatement(insertData);
+                	PreparedStatement prepare = connect.prepareStatement(insertData);
                     prepare.setString(1, tfStdID.getText());
                     prepare.setString(2, tfStdName.getText());
                     prepare.setString(3, tfStdMajor.getText());
@@ -387,13 +377,13 @@ public class StudentManagementController implements Initializable {
 		
 		String sql = "SELECT * FROM student_grade";
 		
-		connect = DatabaseConnection.getDBConnection();
+		Connection connect = DatabaseConnection.getDBConnection();
 		
 		try {
 			Student studentD;
 			
-			prepare = connect.prepareStatement(sql);
-			result = prepare.executeQuery();
+			PreparedStatement prepare = connect.prepareStatement(sql);
+			ResultSet result = prepare.executeQuery();
 			
 			while(result.next()) {
 				studentD = new Student(result.getString("학번"), result.getString("이름"), result.getDouble("학점(1-1)"), result.getDouble("학점(1-2)")
@@ -422,6 +412,7 @@ public class StudentManagementController implements Initializable {
 		std41Column.setCellValueFactory(new PropertyValueFactory<>("std41"));
 		std42Column.setCellValueFactory(new PropertyValueFactory<>("std42"));
 		
+		tableView2.setItems(addStudentsListD);
 		tableView2.setItems(studentGradeList);
 		
 	}
@@ -451,8 +442,7 @@ public class StudentManagementController implements Initializable {
 	// 학점 추가
 	public void studentGradeUpdate() {
 
-        connect = DatabaseConnection.getDBConnection();
-
+		Connection connect = DatabaseConnection.getDBConnection();
 
         try {
 
@@ -463,7 +453,7 @@ public class StudentManagementController implements Initializable {
 
             Alert alert;
             
-            statement = connect.createStatement();
+            Statement statement = connect.createStatement();
             statement.executeUpdate(updateData);
 
             alert = new Alert(AlertType.INFORMATION);
@@ -504,12 +494,8 @@ public class StudentManagementController implements Initializable {
 	public void initialize(URL url, ResourceBundle resources) {
 		
 		addStudentsShowListData();
-		
 		studentGradeShowListData();
-		
-	    // Combobox list
-	    cbStdMajor.setItems(FXCollections.observableArrayList("컴퓨터공학부", "AI소프트웨어학과", "건축학부", "기계공학과", "경영학과"));
-	    cbStdStatus.setItems(FXCollections.observableArrayList("재학", "휴학"));
+
 	}
 	
 	// 필터
@@ -553,7 +539,6 @@ public class StudentManagementController implements Initializable {
 				tableView.setItems(sortedData);
 	}
 	
-	
 	//창 변환
 	public void switchFrom(ActionEvent event) {
 		if (event.getSource() == btnStdAdd) {
@@ -562,7 +547,7 @@ public class StudentManagementController implements Initializable {
 			//나머지 form은 flase
 			
 			//클릭시 색 변화
-			btnStdAdd.setStyle("-fx-background-color:linear-gradient(to bottom right, #CE9FFC, #7367F0);");
+			btnStdAdd.setStyle("-fx-background-color: #3e3e3f;");
 			btnStdGrade.setStyle("-fx-background-color:transparent");
 			addStudentsShowListData();
 			
@@ -572,7 +557,7 @@ public class StudentManagementController implements Initializable {
 			studentGrade_form.setVisible(true);
 			
 			btnStdAdd.setStyle("-fx-background-color:transparent");
-			btnStdGrade.setStyle("-fx-background-color:linear-gradient(to bottom right, #CE9FFC, #7367F0);");
+			btnStdGrade.setStyle("-fx-background-color:#3e3e3f;");
 			studentGradeShowListData();
 		}
 	}
