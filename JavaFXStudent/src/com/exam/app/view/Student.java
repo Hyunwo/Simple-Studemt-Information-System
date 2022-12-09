@@ -19,6 +19,8 @@ public class Student {
 	private Double std41; // 학점(4-1)
 	private Double std42; // 학점(4-2)
 	
+	private Double stdGradeAvg; // 평균
+	
 	public Student(String stdID, String stdName, String stdMajor, String stdGender, Integer stdAge, String stdAddress, String stdStatus/*, Double std11, Double std12, Double std21, Double std22, Double std31, Double std32, Double std41, Double std42*/) {
 		this.stdID = stdID;
 	    this.stdName = stdName;
@@ -30,7 +32,7 @@ public class Student {
 	}
 	
 	public Student(String stdID, String stdName, Double std11, Double std12, Double std21, Double std22, Double std31, Double std32,
-			Double std41, Double std42) {
+			Double std41, Double std42, Double stdGradeAvg) {
 		this.stdID = stdID;
 	    this.stdName = stdName;
 		this.std11 = std11;
@@ -41,6 +43,7 @@ public class Student {
 		this.std32 = std32;
 		this.std41 = std41;
 		this.std42 = std42;
+		this.stdGradeAvg = stdGradeAvg;
 	}
 
 	
@@ -163,4 +166,14 @@ public class Student {
 	public void setStd42(Double std42) {
 		this.std42 = std42;
 	}
+
+	public Double getStdGradeAvg() {
+		return stdGradeAvg;
+	}
+
+	public void setStdGradeAvg(Double stdGradeAvg) {
+		this.stdGradeAvg = stdGradeAvg;
+	}
+	
+	
 }

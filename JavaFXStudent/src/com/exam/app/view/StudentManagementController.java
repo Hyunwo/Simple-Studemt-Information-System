@@ -14,7 +14,8 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.LineChart;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -157,13 +158,16 @@ public class StudentManagementController implements Initializable {
     private AnchorPane main_form;
     
     @FXML
+    private AnchorPane home_form;
+    
+    @FXML
     private AnchorPane AddStudent_form;
     
     @FXML
     private AnchorPane studentGrade_form;
     
     @FXML
-    private LineChart<?, ?> stdGradeLineChart;
+    private BarChart<?, ?> stdGradeBarChart;
 
 	@FXML
 	private TableView<Student> tableView;
@@ -221,15 +225,13 @@ public class StudentManagementController implements Initializable {
     
     @FXML
     private TableColumn<Student, String> stdNameColumn2;
+    
+    @FXML
+    private TableColumn<Student, String> stdGradeAvgColumn;
 	
-	//private Connection connect;
-	//private PreparedStatement prepare;
-	//private Statement statement;
-	//private ResultSet result;
 	
+    
 	ObservableList<Student> observableList = FXCollections.observableArrayList();
-	PreparedStatement pst = null;
-	
 	
 	public ObservableList<Student> addStudentsListData() {
 		
@@ -366,6 +368,130 @@ public class StudentManagementController implements Initializable {
         }
     }
 	
+	// 삭제
+   public void addStudentsDel() {
+      String delData = "DELETE " + "FROM Student " + "where 학번 = ?";
+
+        Connection connect = DatabaseConnection.getDBConnection();
+
+        try {
+            Alert alert;
+
+            // 빈칸 체크 및 에러
+            if (tfStdID.getText().isEmpty()) {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("삭제할 학번을 입력하세요");
+                alert.showAndWait();
+            } else {
+                // stdID가 있는지 체크
+                String checkData = "SELECT 학번 FROM Student WHERE 학번 = '" + tfStdID.getText() + "'";
+
+                Statement statement = connect.createStatement();
+                ResultSet result = statement.executeQuery(checkData);
+                if ( result.next() ) {
+                    
+                    PreparedStatement prepare = connect.prepareStatement(delData);
+                    prepare.setString(1, tfStdID.getText());
+                    prepare.executeUpdate();
+                    
+                    // 학생등록시 성적도 삭제
+                    String delStudentGrade = "DELETE " + "FROM student_grade " + "where 학번 = ?";
+                    
+                    prepare = connect.prepareStatement(delStudentGrade);
+                    prepare.setString(1, tfStdID.getText());
+                    
+                    prepare.executeUpdate();
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("알림");
+                    alert.setHeaderText(null);
+                    alert.setContentText("삭제되었습니다.");
+                    alert.showAndWait();
+
+                   // 업데이트
+                    addStudentsShowListData();
+                    // 초기화
+                    addStudentsClear();
+                } else {
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText(tfStdID.getText() + "는 존재하지 않습니다. ");
+                    alert.showAndWait();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	   
+	
+// 수정
+   public void addStudentsFix() {
+      String updateData = "UPDATE Student "
+                     + "SET 이름=?, 학과=?, 성별=?, 나이=?, 주소=?, `재적 상태`=? "
+                     + "WHERE 학번=?";
+
+        Connection connect = DatabaseConnection.getDBConnection();
+
+        try {
+            Alert alert;
+
+            // 빈칸 체크 및 에러
+            if (tfStdID.getText().isEmpty() || tfStdName.getText().isEmpty() || tfStdMajor.getText().isEmpty()|| tfStdGender.getText().isEmpty() 
+                  || tfStdAge.getText().isEmpty() || tfStdAddress.getText().isEmpty() || tfStdStatus.getText().isEmpty()) {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("빈칸을 채워주세요");
+                alert.showAndWait();
+            } else {
+                // stdID가 있는지 체크
+                String checkData = "SELECT 학번 FROM Student WHERE 학번 = '" + tfStdID.getText() + "'";
+
+                Statement statement = connect.createStatement();
+                ResultSet result = statement.executeQuery(checkData);
+                
+                if ( result.next() ) {
+                    PreparedStatement prepare = connect.prepareStatement(updateData);
+                    prepare.setString(1, tfStdName.getText());
+                    prepare.setString(2, tfStdMajor.getText());
+                    prepare.setString(3, tfStdGender.getText());
+                    prepare.setString(4, tfStdAge.getText());
+                    prepare.setString(5, tfStdAddress.getText());
+                    prepare.setString(6, tfStdStatus.getText());
+                    prepare.setString(7, tfStdID.getText());
+                    
+                    prepare.executeUpdate();
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("알림");
+                    alert.setHeaderText(null);
+                    alert.setContentText("수정되었습니다.");
+                    alert.showAndWait();
+
+                   // 업데이트
+                    addStudentsShowListData();
+                    // 초기화
+                    addStudentsClear(); 
+                //error
+                } else {
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText(tfStdID.getText() + "는 존재하지 않습니다.");
+                    alert.showAndWait();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
 	
 	public ObservableList<Student> studentGradeListData(){
 		
@@ -383,7 +509,7 @@ public class StudentManagementController implements Initializable {
 			
 			while(result.next()) {
 				studentD = new Student(result.getString("학번"), result.getString("이름"), result.getDouble("학점(1-1)"), result.getDouble("학점(1-2)")
-						, result.getDouble("학점(2-1)"), result.getDouble("학점(2-2)"), result.getDouble("학점(3-1)"), result.getDouble("학점(3-2)"), result.getDouble("학점(4-1)"), result.getDouble("학점(4-2)"));
+						, result.getDouble("학점(2-1)"), result.getDouble("학점(2-2)"), result.getDouble("학점(3-1)"), result.getDouble("학점(3-2)"), result.getDouble("학점(4-1)"), result.getDouble("학점(4-2)"), result.getDouble("평균"));
 				listData.add(studentD);
 			}
 			
@@ -407,6 +533,7 @@ public class StudentManagementController implements Initializable {
 		std32Column.setCellValueFactory(new PropertyValueFactory<>("std32"));
 		std41Column.setCellValueFactory(new PropertyValueFactory<>("std41"));
 		std42Column.setCellValueFactory(new PropertyValueFactory<>("std42"));
+		stdGradeAvgColumn.setCellValueFactory(new PropertyValueFactory<>("stdGradeAvg"));
 		
 		tableView2.setItems(studentGradeList);
 		
@@ -436,15 +563,19 @@ public class StudentManagementController implements Initializable {
 	
 	// 학점 추가
 	public void studentGradeUpdate() {
-
+		
 		Connection connect = DatabaseConnection.getDBConnection();
 
+		double stdGradeAvgResult = 0;
+		
         try {
 
+        	stdGradeAvgResult = (Double.parseDouble(tf11.getText()) + Double.parseDouble(tf12.getText()))/2;
+        	
             String updateData = "UPDATE student_grade SET "
                   + " `학점(1-1)` = '" + tf11.getText() + "', `학점(1-2)` = '" + tf12.getText() + "', `학점(2-1)` = '" + tf21.getText() + "', `학점(2-2)` = '" + tf22.getText()
                   + "', `학점(3-1)` = '" + tf31.getText() + "', `학점(3-2)` = '" + tf32.getText() + "', `학점(4-1)` = '" + tf41.getText() + "', `학점(4-2)` = '" + tf42.getText()
-                  + "' WHERE 학번 = '" + tfStdID2.getText() + "'";
+                  + "', 평균 = '" + stdGradeAvgResult + "' WHERE 학번 = '" + tfStdID2.getText() + "'";
 
             Alert alert;
             
@@ -492,7 +623,8 @@ public class StudentManagementController implements Initializable {
 		
 		addStudentsShowListData();
 		studentGradeShowListData();
-
+		
+		
 	}
 	
 	// 필터
@@ -536,25 +668,67 @@ public class StudentManagementController implements Initializable {
 				tableView.setItems(sortedData);
 	}
 	
+	// 성적 차트
+	public void studentGradeBarChart() {
+		
+		stdGradeBarChart.getData().clear();
+		
+		String chartsql = "SELECT 이름, 평균 FROM student_grade";
+		
+		Connection connect = DatabaseConnection.getDBConnection();
+		
+		try {
+			XYChart.Series chart = new XYChart.Series();
+			
+			PreparedStatement prepare = connect.prepareStatement(chartsql);
+			ResultSet result = prepare.executeQuery();
+			
+			while(result.next()) {
+				chart.getData().add(new XYChart.Data(result.getString(1), result.getDouble(2)));
+			}
+			
+			stdGradeBarChart.getData().add(chart);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	//창 변환
 	public void switchFrom(ActionEvent event) {
 		if (event.getSource() == btnStdAdd) {
 			AddStudent_form.setVisible(true);
 			studentGrade_form.setVisible(false);
+			home_form.setVisible(false);
 			//나머지 form은 flase
 			
 			//클릭시 색 변화
 			btnStdAdd.setStyle("-fx-background-color: #3e3e3f;");
 			btnStdGrade.setStyle("-fx-background-color:transparent");
+			btnHome.setStyle("-fx-background-color:transparent");
 			addStudentsShowListData();
 			
 		}
 		else if (event.getSource() == btnStdGrade) {
 			AddStudent_form.setVisible(false);
 			studentGrade_form.setVisible(true);
+			home_form.setVisible(false);
 			
 			btnStdAdd.setStyle("-fx-background-color:transparent");
 			btnStdGrade.setStyle("-fx-background-color:#3e3e3f;");
+			btnHome.setStyle("-fx-background-color:transparent");
+			studentGradeBarChart();
+			studentGradeShowListData();
+			
+		}
+		else if (event.getSource() == btnHome) {
+			AddStudent_form.setVisible(false);
+			studentGrade_form.setVisible(false);
+			home_form.setVisible(true);
+			
+			btnStdAdd.setStyle("-fx-background-color:transparent");
+			btnStdGrade.setStyle("-fx-background-color:transparent");
+			btnHome.setStyle("-fx-background-color:#3e3e3f;");
 			studentGradeShowListData();
 		}
 	}
