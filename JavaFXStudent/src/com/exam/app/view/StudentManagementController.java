@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -56,49 +57,10 @@ public class StudentManagementController implements Initializable {
     private Button btnStdGrade;
 
     @FXML
-    private Label lblStdID;
-
-    @FXML
-    private Label lblStdName;
+    private Label hometotal;
     
     @FXML
-    private Label lblStdMajor;
-    
-    @FXML
-    private Label lblStdGender;
-    
-    @FXML
-    private Label lblStdAge;
-    
-    @FXML
-    private Label lblStdAddress;
-
-    @FXML
-    private Label lblStdStatus;
-    
-    @FXML
-    private Label lbl11;
-
-    @FXML
-    private Label lbl12;
-
-    @FXML
-    private Label lbl21;
-
-    @FXML
-    private Label lbl22;
-
-    @FXML
-    private Label lbl31;
-
-    @FXML
-    private Label lbl32;
-
-    @FXML
-    private Label lbl41;
-
-    @FXML
-    private Label lbl42;
+    private Label homeStd;
 
     @FXML
     private TextField tfStdID;
@@ -168,34 +130,37 @@ public class StudentManagementController implements Initializable {
     
     @FXML
     private BarChart<?, ?> stdGradeBarChart;
+    
+    @FXML
+    private BarChart<?, ?> homeBarChart;
 
-	@FXML
-	private TableView<Student> tableView;
-	
-	@FXML
-	private TableView<Student> tableView2;
-	
-	@FXML
-	private TableColumn<Student, String> stdIDColumn;
-	
-	@FXML
-	private TableColumn<Student, String> stdNameColumn;
-	
-	@FXML
-	private TableColumn<Student, String> stdMajorColumn;
-	
+   @FXML
+   private TableView<Student> tableView;
+   
+   @FXML
+   private TableView<Student> tableView2;
+   
+   @FXML
+   private TableColumn<Student, String> stdIDColumn;
+   
+   @FXML
+   private TableColumn<Student, String> stdNameColumn;
+   
+   @FXML
+   private TableColumn<Student, String> stdMajorColumn;
+   
     @FXML
     private TableColumn<Student, String> stdGenderColumn;
-	
-	@FXML
-	private TableColumn<Student, Integer> stdAgeColumn;
-	
+   
+   @FXML
+   private TableColumn<Student, Integer> stdAgeColumn;
+   
     @FXML
     private TableColumn<Student, String> stdAddressColumn;
-	
-	@FXML
+   
+   @FXML
     private TableColumn<Student, String> stdStatusColumn;
-	
+   
     @FXML
     private TableColumn<Student, String> std11Column;
 
@@ -228,80 +193,79 @@ public class StudentManagementController implements Initializable {
     
     @FXML
     private TableColumn<Student, String> stdGradeAvgColumn;
-	
-	
+   
     
-	ObservableList<Student> observableList = FXCollections.observableArrayList();
-	
-	public ObservableList<Student> addStudentsListData() {
-		
-		String studentViewQuery = "SELECT * FROM Student";
-		
-		Connection connect = DatabaseConnection.getDBConnection();
-		
-		try {
-			Student studentD;
-			PreparedStatement prepare = connect.prepareStatement(studentViewQuery);
-			ResultSet result = prepare.executeQuery();
-			
-			while (result.next()) {
-				studentD = new Student(result.getString("학번"), result.getString("이름"), result.getString("학과"), result.getString("성별"), result.getInt("나이"), result.getString("주소"), result.getString("재적 상태"));
-				observableList.add(studentD);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-			
-		} return observableList;
-	}
-	
-	// 테이블 보기
-	private ObservableList<Student> addStudentsListD;
-	public void addStudentsShowListData() {
-		observableList.clear();
-		addStudentsListD = addStudentsListData();
-		
-		stdIDColumn.setCellValueFactory(new PropertyValueFactory<>("stdID"));
-		stdNameColumn.setCellValueFactory(new PropertyValueFactory<>("stdName"));
-		stdMajorColumn.setCellValueFactory(new PropertyValueFactory<>("stdMajor"));
-		stdGenderColumn.setCellValueFactory(new PropertyValueFactory<>("stdGender"));
-		stdAgeColumn.setCellValueFactory(new PropertyValueFactory<>("stdAge"));
-		stdAddressColumn.setCellValueFactory(new PropertyValueFactory<>("stdAddress"));
-		stdStatusColumn.setCellValueFactory(new PropertyValueFactory<>("stdStatus"));
-		
-		tableView.setItems(addStudentsListD);
-	}
-	
-	// tableView에서 선택하면 textfield에 보이게 한다
-	public void addStudentsSelect() {
-		
-		Student studentD = tableView.getSelectionModel().getSelectedItem();
-		int num = tableView.getSelectionModel().getSelectedIndex();
-		
-		if( (num - 1) < -1) {
-			return;
-		}
-		
-		tfStdID.setText(studentD.getStdID());
-		tfStdName.setText(studentD.getStdName());
-		tfStdMajor.setText(studentD.getStdMajor());
-		tfStdGender.setText(studentD.getStdGender());
-		tfStdAge.setText(String.valueOf(studentD.getStdAge()));
-		tfStdAddress.setText(studentD.getStdAddress());
-		tfStdStatus.setText(studentD.getStdStatus());
-	}
-	
-	// 등록
-	public void addStudentsAdd() {
-		String insertData = "INSERT INTO Student " + "(학번, 이름, 학과, 성별, 나이, 주소, `재적 상태`) " + "VALUES(?,?,?,?,?,?,?)";
+   ObservableList<Student> observableList = FXCollections.observableArrayList();
+   
+   public ObservableList<Student> addStudentsListData() {
+      
+      String studentViewQuery = "SELECT * FROM Student";
+      
+      Connection connect = DatabaseConnection.getDBConnection();
+      
+      try {
+         Student studentD;
+         PreparedStatement prepare = connect.prepareStatement(studentViewQuery);
+         ResultSet result = prepare.executeQuery();
+         
+         while (result.next()) {
+            studentD = new Student(result.getString("학번"), result.getString("이름"), result.getString("학과"), result.getString("성별"), result.getInt("나이"), result.getString("주소"), result.getString("재적 상태"));
+            observableList.add(studentD);
+         }
+      } catch(Exception e) {
+         e.printStackTrace();
+         
+      } return observableList;
+   }
+   
+   // 테이블 보기
+   private ObservableList<Student> addStudentsListD;
+   public void addStudentsShowListData() {
+      observableList.clear();
+      addStudentsListD = addStudentsListData();
+      
+      stdIDColumn.setCellValueFactory(new PropertyValueFactory<>("stdID"));
+      stdNameColumn.setCellValueFactory(new PropertyValueFactory<>("stdName"));
+      stdMajorColumn.setCellValueFactory(new PropertyValueFactory<>("stdMajor"));
+      stdGenderColumn.setCellValueFactory(new PropertyValueFactory<>("stdGender"));
+      stdAgeColumn.setCellValueFactory(new PropertyValueFactory<>("stdAge"));
+      stdAddressColumn.setCellValueFactory(new PropertyValueFactory<>("stdAddress"));
+      stdStatusColumn.setCellValueFactory(new PropertyValueFactory<>("stdStatus"));
+      
+      tableView.setItems(addStudentsListD);
+   }
+   
+   // tableView에서 선택하면 textfield에 보이게 한다
+   public void addStudentsSelect() {
+      
+      Student studentD = tableView.getSelectionModel().getSelectedItem();
+      int num = tableView.getSelectionModel().getSelectedIndex();
+      
+      if( (num - 1) < -1) {
+         return;
+      }
+      
+      tfStdID.setText(studentD.getStdID());
+      tfStdName.setText(studentD.getStdName());
+      tfStdMajor.setText(studentD.getStdMajor());
+      tfStdGender.setText(studentD.getStdGender());
+      tfStdAge.setText(String.valueOf(studentD.getStdAge()));
+      tfStdAddress.setText(studentD.getStdAddress());
+      tfStdStatus.setText(studentD.getStdStatus());
+   }
+   
+   // 등록
+   public void addStudentsAdd() {
+      String insertData = "INSERT INTO Student " + "(학번, 이름, 학과, 성별, 나이, 주소, `재적 상태`) " + "VALUES(?,?,?,?,?,?,?)";
 
-		Connection connect = DatabaseConnection.getDBConnection();
+      Connection connect = DatabaseConnection.getDBConnection();
 
         try {
             Alert alert;
 
             // 빈칸 체크 및 에러
             if (tfStdID.getText().isEmpty() || tfStdName.getText().isEmpty() || tfStdMajor.getText().isEmpty()|| tfStdGender.getText().isEmpty() 
-            		|| tfStdAge.getText().isEmpty() || tfStdAddress.getText().isEmpty() || tfStdStatus.getText().isEmpty()) {
+                  || tfStdAge.getText().isEmpty() || tfStdAddress.getText().isEmpty() || tfStdStatus.getText().isEmpty()) {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -322,7 +286,7 @@ public class StudentManagementController implements Initializable {
                     alert.setContentText(tfStdID.getText() + "는 이미 존재합니다.");
                     alert.showAndWait();
                 } else {
-                	PreparedStatement prepare = connect.prepareStatement(insertData);
+                   PreparedStatement prepare = connect.prepareStatement(insertData);
                     prepare.setString(1, tfStdID.getText());
                     prepare.setString(2, tfStdName.getText());
                     prepare.setString(3, tfStdMajor.getText());
@@ -356,7 +320,7 @@ public class StudentManagementController implements Initializable {
                     alert.setContentText("등록되었습니다.");
                     alert.showAndWait();
 
-                	// 업데이트
+                   // 업데이트
                     addStudentsShowListData();
                     // 초기화
                     addStudentsClear();
@@ -367,8 +331,8 @@ public class StudentManagementController implements Initializable {
             e.printStackTrace();
         }
     }
-	
-	// 삭제
+   
+   // 삭제
    public void addStudentsDel() {
       String delData = "DELETE " + "FROM Student " + "where 학번 = ?";
 
@@ -427,8 +391,8 @@ public class StudentManagementController implements Initializable {
             e.printStackTrace();
         }
     }
-	   
-	
+      
+   
 // 수정
    public void addStudentsFix() {
       String updateData = "UPDATE Student "
@@ -491,87 +455,127 @@ public class StudentManagementController implements Initializable {
             e.printStackTrace();
         }
     }
-	
-	
-	public ObservableList<Student> studentGradeListData(){
-		
-		ObservableList<Student> listData = FXCollections.observableArrayList();
-		
-		String sql = "SELECT * FROM student_grade";
-		
-		Connection connect = DatabaseConnection.getDBConnection();
-		
-		try {
-			Student studentD;
-			
-			PreparedStatement prepare = connect.prepareStatement(sql);
-			ResultSet result = prepare.executeQuery();
-			
-			while(result.next()) {
-				studentD = new Student(result.getString("학번"), result.getString("이름"), result.getDouble("학점(1-1)"), result.getDouble("학점(1-2)")
-						, result.getDouble("학점(2-1)"), result.getDouble("학점(2-2)"), result.getDouble("학점(3-1)"), result.getDouble("학점(3-2)"), result.getDouble("학점(4-1)"), result.getDouble("학점(4-2)"), result.getDouble("평균"));
-				listData.add(studentD);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listData;
-	}
-	
-	private ObservableList<Student> studentGradeList;
-	private void studentGradeShowListData() {
-		studentGradeList = studentGradeListData();
-		
-		stdIDColumn2.setCellValueFactory(new PropertyValueFactory<>("stdID"));
-		stdNameColumn2.setCellValueFactory(new PropertyValueFactory<>("stdName"));
-		std11Column.setCellValueFactory(new PropertyValueFactory<>("std11"));
-		std12Column.setCellValueFactory(new PropertyValueFactory<>("std12"));
-		std21Column.setCellValueFactory(new PropertyValueFactory<>("std21"));
-		std22Column.setCellValueFactory(new PropertyValueFactory<>("std22"));
-		std31Column.setCellValueFactory(new PropertyValueFactory<>("std31"));
-		std32Column.setCellValueFactory(new PropertyValueFactory<>("std32"));
-		std41Column.setCellValueFactory(new PropertyValueFactory<>("std41"));
-		std42Column.setCellValueFactory(new PropertyValueFactory<>("std42"));
-		stdGradeAvgColumn.setCellValueFactory(new PropertyValueFactory<>("stdGradeAvg"));
-		
-		tableView2.setItems(studentGradeList);
-		
-	}
-	
-	// tableView2에서 선택하면 textfield에 보이게 한다
-	public void studentGradesSelect() {
-		
-		Student studentD = tableView2.getSelectionModel().getSelectedItem();
-	    int num = tableView2.getSelectionModel().getSelectedIndex();
+   
+   
+   public ObservableList<Student> studentGradeListData(){
+      
+      ObservableList<Student> listData = FXCollections.observableArrayList();
+      
+      String sql = "SELECT * FROM student_grade";
+      
+      Connection connect = DatabaseConnection.getDBConnection();
+      
+      try {
+         Student studentD;
+         
+         PreparedStatement prepare = connect.prepareStatement(sql);
+         ResultSet result = prepare.executeQuery();
+         
+         while(result.next()) {
+            studentD = new Student(result.getString("학번"), result.getString("이름"), result.getDouble("학점(1-1)"), result.getDouble("학점(1-2)")
+                  , result.getDouble("학점(2-1)"), result.getDouble("학점(2-2)"), result.getDouble("학점(3-1)"), result.getDouble("학점(3-2)"), result.getDouble("학점(4-1)"), result.getDouble("학점(4-2)"), result.getDouble("평균"));
+            listData.add(studentD);
+         }
+         
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+      return listData;
+   }
+   
+   private ObservableList<Student> studentGradeList;
+   private void studentGradeShowListData() {
+      studentGradeList = studentGradeListData();
+      
+      stdIDColumn2.setCellValueFactory(new PropertyValueFactory<>("stdID"));
+      stdNameColumn2.setCellValueFactory(new PropertyValueFactory<>("stdName"));
+      std11Column.setCellValueFactory(new PropertyValueFactory<>("std11"));
+      std12Column.setCellValueFactory(new PropertyValueFactory<>("std12"));
+      std21Column.setCellValueFactory(new PropertyValueFactory<>("std21"));
+      std22Column.setCellValueFactory(new PropertyValueFactory<>("std22"));
+      std31Column.setCellValueFactory(new PropertyValueFactory<>("std31"));
+      std32Column.setCellValueFactory(new PropertyValueFactory<>("std32"));
+      std41Column.setCellValueFactory(new PropertyValueFactory<>("std41"));
+      std42Column.setCellValueFactory(new PropertyValueFactory<>("std42"));
+      stdGradeAvgColumn.setCellValueFactory(new PropertyValueFactory<>("stdGradeAvg"));
+      
+      tableView2.setItems(studentGradeList);
+      
+   }
+   
+   // tableView2에서 선택하면 textfield에 보이게 한다
+   public void studentGradesSelect() {
+      
+      Student studentD = tableView2.getSelectionModel().getSelectedItem();
+       int num = tableView2.getSelectionModel().getSelectedIndex();
 
-	    if ((num - 1) < -1) {
-	    	return;
-	        }
+       if ((num - 1) < -1) {
+          return;
+           }
 
-	    tfStdID2.setText(studentD.getStdID());
-	    tfStdName2.setText(studentD.getStdName());
-	    tf11.setText(String.valueOf(studentD.getStd11()));
-	    tf12.setText(String.valueOf(studentD.getStd12()));
-	    tf21.setText(String.valueOf(studentD.getStd21()));
-	    tf22.setText(String.valueOf(studentD.getStd22()));
-	    tf31.setText(String.valueOf(studentD.getStd31()));
-	    tf32.setText(String.valueOf(studentD.getStd32()));
-	    tf41.setText(String.valueOf(studentD.getStd41()));
-	    tf42.setText(String.valueOf(studentD.getStd42()));
-	}
-	
-	// 학점 추가
-	public void studentGradeUpdate() {
-		
-		Connection connect = DatabaseConnection.getDBConnection();
+       tfStdID2.setText(studentD.getStdID());
+       tfStdName2.setText(studentD.getStdName());
+       tf11.setText(String.valueOf(studentD.getStd11()));
+       tf12.setText(String.valueOf(studentD.getStd12()));
+       tf21.setText(String.valueOf(studentD.getStd21()));
+       tf22.setText(String.valueOf(studentD.getStd22()));
+       tf31.setText(String.valueOf(studentD.getStd31()));
+       tf32.setText(String.valueOf(studentD.getStd32()));
+       tf41.setText(String.valueOf(studentD.getStd41()));
+       tf42.setText(String.valueOf(studentD.getStd42()));
+   }
+   
+   // count
+   public int count() {
+      
+      int cnt = 0;
+      
+      if(Double.parseDouble(tf11.getText()) != 0) {
+          cnt += 1;
+       } else return cnt;
+      
+       if(Double.parseDouble(tf12.getText()) != 0) {
+          cnt += 1;
+       } else return cnt;
+       
+       if(Double.parseDouble(tf21.getText()) != 0) {
+          cnt += 1;
+       } else return cnt;
+       
+       if(Double.parseDouble(tf22.getText()) != 0) {
+          cnt += 1;
+       } else return cnt;
+       
+       if(Double.parseDouble(tf31.getText()) != 0) {
+          cnt += 1;
+       } else return cnt;
+       
+       if(Double.parseDouble(tf32.getText()) != 0) {
+          cnt += 1;
+       } else return cnt;
+       
+       if(Double.parseDouble(tf41.getText()) != 0) {
+          cnt += 1;
+       } else return cnt;
+       
+       if(Double.parseDouble(tf42.getText()) != 0) {
+          cnt += 1;
+       } else return cnt;
+       return cnt;
+   }
+   
+   // 학점 추가
+   public void studentGradeUpdate() {
+      
+      Connection connect = DatabaseConnection.getDBConnection();
 
-		double stdGradeAvgResult = 0;
-		
+      double stdGradeAvgResult = 0;
+      
         try {
-
-        	stdGradeAvgResult = (Double.parseDouble(tf11.getText()) + Double.parseDouble(tf12.getText()))/2;
-        	
+           
+           stdGradeAvgResult = (Double.parseDouble(tf11.getText()) + Double.parseDouble(tf12.getText()) + Double.parseDouble(tf21.getText()) 
+           + Double.parseDouble(tf22.getText()) + Double.parseDouble(tf31.getText()) + Double.parseDouble(tf32.getText()) + Double.parseDouble(tf41.getText()) + Double.parseDouble(tf42.getText())) / count();
+           
             String updateData = "UPDATE student_grade SET "
                   + " `학점(1-1)` = '" + tf11.getText() + "', `학점(1-2)` = '" + tf12.getText() + "', `학점(2-1)` = '" + tf21.getText() + "', `학점(2-2)` = '" + tf22.getText()
                   + "', `학점(3-1)` = '" + tf31.getText() + "', `학점(3-2)` = '" + tf32.getText() + "', `학점(4-1)` = '" + tf41.getText() + "', `학점(4-2)` = '" + tf42.getText()
@@ -590,148 +594,230 @@ public class StudentManagementController implements Initializable {
 
             // 업데이트
             studentGradeShowListData();
+            studentGradeBarChart();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-	
-	// 초기화
-	public void addStudentsClear() {
-		tfStdID.setText("");
-		tfStdName.setText(null);
-		tfStdMajor.setText(null);
-		tfStdGender.setText(null);
-		tfStdAge.setText(null);
-		tfStdAddress.setText(null);
-		tfStdStatus.setText(null);
-		
-		tfStdID2.setText("");
-		tfStdName2.setText(null);
-		tf11.setText("");
-		tf12.setText("");
-		tf21.setText("");
-		tf22.setText("");
-		tf31.setText("");
-		tf32.setText("");
-		tf41.setText("");
-		tf42.setText(null);
-	}
-	
-	@Override
-	public void initialize(URL url, ResourceBundle resources) {
-		
-		addStudentsShowListData();
-		studentGradeShowListData();
-		
-		
-	}
-	
-	// 필터
-	public void addStudentsSearch() {
-		
-				FilteredList<Student> filteredData = new FilteredList<>(observableList, b -> true);
-				
-				tfStdSearch.textProperty().addListener((observable, oldValue, newValue) ->{
-					filteredData.setPredicate(Student -> {
-						
-						if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
-							return true;
-						}
-						
-						String searchKeyword = newValue.toLowerCase();
-						
-						if (Student.getStdID().toLowerCase().indexOf(searchKeyword) > -1) {
-							return true;
-						} else if (Student.getStdName().toLowerCase().indexOf(searchKeyword) > -1) {
-							return true;
-						} else if (Student.getStdMajor().toLowerCase().indexOf(searchKeyword) > -1) {
-							return true;
-						} else if (Student.getStdGender().toLowerCase().indexOf(searchKeyword) > -1) {
-							return true;
-						} else if (Student.getStdAge().toString().indexOf(searchKeyword) > -1) {
-							return true;
-						} else if (Student.getStdAddress().toLowerCase().indexOf(searchKeyword) > -1) {
-							return true;
-						} else if (Student.getStdStatus().toLowerCase().indexOf(searchKeyword) > -1) {
-							return true;
-						} else
-							return false; // 찾는 값이 없음
-					});
-				});
-				
-				SortedList<Student> sortedData = new SortedList <>(filteredData);
-				
-				sortedData.comparatorProperty().bind(tableView.comparatorProperty());
-				
-				// 필터, 정렬 tableView에 적용
-				tableView.setItems(sortedData);
-	}
-	
-	// 성적 차트
-	public void studentGradeBarChart() {
-		
-		stdGradeBarChart.getData().clear();
-		
-		String chartsql = "SELECT 이름, 평균 FROM student_grade";
-		
-		Connection connect = DatabaseConnection.getDBConnection();
-		
-		try {
-			XYChart.Series chart = new XYChart.Series();
-			
-			PreparedStatement prepare = connect.prepareStatement(chartsql);
-			ResultSet result = prepare.executeQuery();
-			
-			while(result.next()) {
-				chart.getData().add(new XYChart.Data(result.getString(1), result.getDouble(2)));
-			}
-			
-			stdGradeBarChart.getData().add(chart);
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	//창 변환
-	public void switchFrom(ActionEvent event) {
-		if (event.getSource() == btnStdAdd) {
-			AddStudent_form.setVisible(true);
-			studentGrade_form.setVisible(false);
-			home_form.setVisible(false);
-			//나머지 form은 flase
-			
-			//클릭시 색 변화
-			btnStdAdd.setStyle("-fx-background-color: #3e3e3f;");
-			btnStdGrade.setStyle("-fx-background-color:transparent");
-			btnHome.setStyle("-fx-background-color:transparent");
-			addStudentsShowListData();
-			
-		}
-		else if (event.getSource() == btnStdGrade) {
-			AddStudent_form.setVisible(false);
-			studentGrade_form.setVisible(true);
-			home_form.setVisible(false);
-			
-			btnStdAdd.setStyle("-fx-background-color:transparent");
-			btnStdGrade.setStyle("-fx-background-color:#3e3e3f;");
-			btnHome.setStyle("-fx-background-color:transparent");
-			studentGradeBarChart();
-			studentGradeShowListData();
-			
-		}
-		else if (event.getSource() == btnHome) {
-			AddStudent_form.setVisible(false);
-			studentGrade_form.setVisible(false);
-			home_form.setVisible(true);
-			
-			btnStdAdd.setStyle("-fx-background-color:transparent");
-			btnStdGrade.setStyle("-fx-background-color:transparent");
-			btnHome.setStyle("-fx-background-color:#3e3e3f;");
-			studentGradeShowListData();
-		}
-	}
-	
-	
+   
+   // 초기화
+   public void addStudentsClear() {
+      tfStdID.setText("");
+      tfStdName.setText(null);
+      tfStdMajor.setText(null);
+      tfStdGender.setText(null);
+      tfStdAge.setText(null);
+      tfStdAddress.setText(null);
+      tfStdStatus.setText(null);
+      
+      tfStdID2.setText("");
+      tfStdName2.setText(null);
+      tf11.setText("");
+      tf12.setText("");
+      tf21.setText("");
+      tf22.setText("");
+      tf31.setText("");
+      tf32.setText("");
+      tf41.setText("");
+      tf42.setText(null);
+   }
+   
+   @Override
+   public void initialize(URL url, ResourceBundle resources) {
+      
+	  btnHome.setStyle("-fx-background-color:#3e3e3f;");
+	  homeXYChart();
+	  home();
+	  homeNow();
+      addStudentsShowListData();
+      studentGradeShowListData();
+      studentGradeBarChart();
+      
+   }
+   
+   // 필터
+   public void addStudentsSearch() {
+      
+            FilteredList<Student> filteredData = new FilteredList<>(observableList, b -> true);
+            
+            tfStdSearch.textProperty().addListener((observable, oldValue, newValue) ->{
+               filteredData.setPredicate(Student -> {
+                  
+                  if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                     return true;
+                  }
+                  
+                  String searchKeyword = newValue.toLowerCase();
+                  
+                  if (Student.getStdID().toLowerCase().indexOf(searchKeyword) > -1) {
+                     return true;
+                  } else if (Student.getStdName().toLowerCase().indexOf(searchKeyword) > -1) {
+                     return true;
+                  } else if (Student.getStdMajor().toLowerCase().indexOf(searchKeyword) > -1) {
+                     return true;
+                  } else if (Student.getStdGender().toLowerCase().indexOf(searchKeyword) > -1) {
+                     return true;
+                  } else if (Student.getStdAge().toString().indexOf(searchKeyword) > -1) {
+                     return true;
+                  } else if (Student.getStdAddress().toLowerCase().indexOf(searchKeyword) > -1) {
+                     return true;
+                  } else if (Student.getStdStatus().toLowerCase().indexOf(searchKeyword) > -1) {
+                     return true;
+                  } else
+                     return false; // 찾는 값이 없음
+               });
+            });
+            
+            SortedList<Student> sortedData = new SortedList <>(filteredData);
+            
+            sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+            
+            // 필터, 정렬 tableView에 적용
+            tableView.setItems(sortedData);
+   }
+   
+   // 성적 차트
+   public void studentGradeBarChart() {
+      
+      stdGradeBarChart.getData().clear();
+      
+      String chartsql = "SELECT 이름, 평균 FROM student_grade";
+      
+      Connection connect = DatabaseConnection.getDBConnection();
+      
+      try {
+         XYChart.Series chart = new XYChart.Series();
+         
+         PreparedStatement prepare = connect.prepareStatement(chartsql);
+         ResultSet result = prepare.executeQuery();
+         
+         while(result.next()) {
+            chart.getData().add(new XYChart.Data(result.getString(1), result.getDouble(2)));
+         }
+         
+         stdGradeBarChart.getData().add(chart);
+         
+      } catch(Exception e) {
+         e.printStackTrace();
+      }
+   }
+   
+   //창 변환
+   public void switchFrom(ActionEvent event) {
+      if (event.getSource() == btnStdAdd) {
+         AddStudent_form.setVisible(true);
+         studentGrade_form.setVisible(false);
+         home_form.setVisible(false);
+         //나머지 form은 flase
+         
+         //클릭시 색 변화
+         btnStdAdd.setStyle("-fx-background-color: #3e3e3f;");
+         btnStdGrade.setStyle("-fx-background-color:transparent");
+         btnHome.setStyle("-fx-background-color:transparent");
+         addStudentsShowListData();
+         
+      }
+      else if (event.getSource() == btnStdGrade) {
+         AddStudent_form.setVisible(false);
+         studentGrade_form.setVisible(true);
+         home_form.setVisible(false);
+         
+         btnStdAdd.setStyle("-fx-background-color:transparent");
+         btnStdGrade.setStyle("-fx-background-color:#3e3e3f;");
+         btnHome.setStyle("-fx-background-color:transparent");
+         studentGradeBarChart();
+         studentGradeShowListData();
+         
+      }
+      else if (event.getSource() == btnHome) {
+         AddStudent_form.setVisible(false);
+         studentGrade_form.setVisible(false);
+         home_form.setVisible(true);
+         
+         btnStdAdd.setStyle("-fx-background-color:transparent");
+         btnStdGrade.setStyle("-fx-background-color:transparent");
+         btnHome.setStyle("-fx-background-color:#3e3e3f;");
+         home();
+         homeNow();
+         homeXYChart();
+      }
+   }
+   
+   // 전체 학생수
+   public void home() {
+
+       String sql = "SELECT COUNT(학번) FROM Student";
+       Connection connect = DatabaseConnection.getDBConnection();
+
+       int count = 0;
+
+       try {
+           PreparedStatement prepare = connect.prepareStatement(sql);
+           ResultSet result = prepare.executeQuery();
+
+           if (result.next()) {
+               count = result.getInt("COUNT(학번)");
+           }
+
+           hometotal.setText(String.valueOf(count));
+
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+
+   }
+   
+   // 재학생수
+   public void homeNow() {
+
+       String sql = "SELECT COUNT(학번) FROM Student WHERE `재적 상태` = '재학'";
+       Connection connect = DatabaseConnection.getDBConnection();
+
+       int count = 0;
+
+       try {
+           PreparedStatement prepare = connect.prepareStatement(sql);
+           ResultSet result = prepare.executeQuery();
+
+           if (result.next()) {
+               count = result.getInt("COUNT(학번)");
+           }
+
+           homeStd.setText(String.valueOf(count));
+
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+
+   }
+
+   // 재학생 성별 막대 그래프
+   public void homeXYChart() {
+
+	   homeBarChart.getData().clear();
+
+       String sql = "SELECT 성별, COUNT(학번) FROM student WHERE `재적 상태` = '재학' group by 성별";
+
+       Connection connect = DatabaseConnection.getDBConnection();
+
+       try {
+           XYChart.Series chart = new XYChart.Series();
+
+           PreparedStatement prepare = connect.prepareStatement(sql);
+           ResultSet result = prepare.executeQuery();
+
+           while (result.next()) {
+               chart.getData().add(new XYChart.Data(result.getString(1), result.getInt(2)));
+           }
+
+           homeBarChart.getData().add(chart);
+
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+
+   }
+   
+   
 }
